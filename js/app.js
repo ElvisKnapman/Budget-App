@@ -11,6 +11,28 @@ const UIController = (function() {
 // GLOBAL APP CONTROLLER
 const controller = (function(budgetCtrl, UICtrl) {
   document.querySelector(".add__btn").addEventListener("click", () => {
-    consol.log;
+    console.log('button was clicked');
+
+    // 1. Get the field input data
+
+    // 2. Add the item to the budget controller
+
+    // 3. Add the item to the UI
+
+    // 4. Calculate the budget
+
+    // 5. Display the budget
+
   });
+
+  document.addEventListener('keyup', (event) => {
+    console.log(`${event.key} key was pressed`);
+    console.log('keyboard event object', event)
+
+    // event.which used for older browser support
+    if (event.keyCode === 13 || event.which === 13) {
+      console.log('That is the enter key')
+    }
+  });
+
 })(budgetController, UIController);
