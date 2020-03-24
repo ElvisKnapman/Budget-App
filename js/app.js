@@ -10,8 +10,8 @@ const UIController = (function() {
 
 // GLOBAL APP CONTROLLER
 const controller = (function(budgetCtrl, UICtrl) {
-  document.querySelector(".add__btn").addEventListener("click", () => {
-    console.log('button was clicked');
+
+  const ctrlAddItem = () => {
 
     // 1. Get the field input data
 
@@ -23,15 +23,16 @@ const controller = (function(budgetCtrl, UICtrl) {
 
     // 5. Display the budget
 
-  });
+    console.log('It works');
+  } 
+
+  document.querySelector(".add__btn").addEventListener("click", ctrlAddItem);
 
   document.addEventListener('keyup', (event) => {
-    console.log(`${event.key} key was pressed`);
-    console.log('keyboard event object', event)
 
     // event.which used for older browser support
     if (event.keyCode === 13 || event.which === 13) {
-      console.log('That is the enter key')
+      ctrlAddItem();
     }
   });
 
