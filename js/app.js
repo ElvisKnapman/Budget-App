@@ -10,7 +10,8 @@ const UIController = (function() {
   const DOMstrings = {
     inputType: '.add__type',
     inputDescription: '.add__description',
-    inputValue: '.add__value'
+    inputValue: '.add__value',
+    inputBtn: '.add__btn'
 
   }
   
@@ -22,6 +23,11 @@ const UIController = (function() {
         description: document.querySelector(DOMstrings.inputDescription).value,
         value: document.querySelector(DOMstrings.inputValue).value
       };
+
+    },
+
+      getDOMstrings: function() {
+        return DOMstrings;
     }
   }
 })();
@@ -29,10 +35,13 @@ const UIController = (function() {
 // GLOBAL APP CONTROLLER
 const controller = (function(budgetCtrl, UICtrl) {
 
+  // DOM element strings
+  const DOM = UICtrl.getDOMstrings();
+
   const ctrlAddItem = () => {
 
     // 1. Get the field input data
-    const input = UIController.getInput();
+    const input = UICtrl.getInput();
     console.log(input);
 
     // 2. Add the item to the budget controller
@@ -45,7 +54,7 @@ const controller = (function(budgetCtrl, UICtrl) {
 
   } 
 
-  document.querySelector(".add__btn").addEventListener("click", ctrlAddItem);
+  document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
   document.addEventListener('keyup', (event) => {
 
