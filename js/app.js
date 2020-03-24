@@ -5,7 +5,17 @@ const budgetController = (function() {
 
 // UI CONTROLLER
 const UIController = (function() {
-  // some code
+  
+  return {
+    getInput: function() {
+
+      return {
+        type: document.querySelector('.add__type').value,
+        description: document.querySelector('.add__description').value,
+        value: document.querySelector('.add__value').value
+      };
+    }
+  }
 })();
 
 // GLOBAL APP CONTROLLER
@@ -14,6 +24,8 @@ const controller = (function(budgetCtrl, UICtrl) {
   const ctrlAddItem = () => {
 
     // 1. Get the field input data
+    const input = UIController.getInput();
+    console.log(input);
 
     // 2. Add the item to the budget controller
 
@@ -23,7 +35,6 @@ const controller = (function(budgetCtrl, UICtrl) {
 
     // 5. Display the budget
 
-    console.log('It works');
   } 
 
   document.querySelector(".add__btn").addEventListener("click", ctrlAddItem);
