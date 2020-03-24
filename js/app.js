@@ -5,41 +5,45 @@ const budgetController = (function() {
 
 // UI CONTROLLER
 const UIController = (function() {
-
   // DOM elements
   const DOMstrings = {
-    inputType: '.add__type',
-    inputDescription: '.add__description',
-    inputValue: '.add__value',
-    inputBtn: '.add__btn'
+    inputType: ".add__type",
+    inputDescription: ".add__description",
+    inputValue: ".add__value",
+    inputBtn: ".add__btn"
+  };
 
-  }
-  
   return {
     getInput: function() {
-
       return {
         type: document.querySelector(DOMstrings.inputType).value,
         description: document.querySelector(DOMstrings.inputDescription).value,
         value: document.querySelector(DOMstrings.inputValue).value
       };
-
     },
 
-      getDOMstrings: function() {
-        return DOMstrings;
+    getDOMstrings: function() {
+      return DOMstrings;
     }
-  }
+  };
 })();
 
 // GLOBAL APP CONTROLLER
 const controller = (function(budgetCtrl, UICtrl) {
+  const setupEventListeners = () => {
+    // DOM element strings
+    const DOM = UICtrl.getDOMstrings();
+    document.querySelector(DOM.inputBtn).addEventListener("click", ctrlAddItem);
 
-  // DOM element strings
-  const DOM = UICtrl.getDOMstrings();
+    document.addEventListener("keyup", event => {
+      // event.which used for older browser support
+      if (event.keyCode === 13 || event.which === 13) {
+        ctrlAddItem();
+      }
+    });
+  };
 
   const ctrlAddItem = () => {
-
     // 1. Get the field input data
     const input = UICtrl.getInput();
     console.log(input);
@@ -51,17 +55,14 @@ const controller = (function(budgetCtrl, UICtrl) {
     // 4. Calculate the budget
 
     // 5. Display the budget
+  };
 
-  } 
-
-  document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
-
-  document.addEventListener('keyup', (event) => {
-
-    // event.which used for older browser support
-    if (event.keyCode === 13 || event.which === 13) {
-      ctrlAddItem();
+  return {
+    init: function() {
+      console.log("app started");
+      setupEventListeners();
     }
-  });
-
+  };
 })(budgetController, UIController);
+
+controller.init();
