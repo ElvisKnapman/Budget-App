@@ -1,0 +1,8 @@
+{
+  "name": "budgety",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ElvisKnapman/Budget-App.git",
+  "author": "Elvis Knapman <elvis@elvisknapman.com>",
+  "license": "MIT"
+}
