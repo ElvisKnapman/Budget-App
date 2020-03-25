@@ -1,12 +1,12 @@
 // BUDGET CONTROLLER
-const budgetController = (function() {
-  const Expense = function(id, description, value) {
+const budgetController = (function () {
+  const Expense = function (id, description, value) {
     this.id = id;
     this.description = description;
     this.value = value;
   };
 
-  const Income = function(id, description, value) {
+  const Income = function (id, description, value) {
     this.id = id;
     this.description = description;
     this.value = value;
@@ -15,48 +15,80 @@ const budgetController = (function() {
   const data = {
     allItems: {
       exp: [],
-      inc: []
+      inc: [],
     },
     totals: {
       exp: 0,
-      inc: 0
-    }
+      inc: 0,
+    },
+  };
+
+  return {
+    addItem: function (type, desc, val) {
+      let newItem, id;
+
+      // create new ID
+      if (data.allItems[type].length > 0) {
+        // if data in array, increment ID
+        id = data.allItems[type][data.allItems[type].length - 1].id + 1;
+      } else {
+        // id is 0 if array is empty
+        id = 0;
+      }
+
+      // type uses 'exp' or 'inc' --- same as property names in object
+      if (type === "exp") {
+        newItem = new Expense(id, desc, val);
+      } else if (type === "inc") {
+        newItem = new Income(id, desc, val);
+      }
+
+      // push into data structure
+      data.allItems[type].push(newItem);
+
+      // return the new item
+      return newItem;
+    },
+
+    testing: function () {
+      console.log("data:", data);
+    },
   };
 })();
 
 // UI CONTROLLER
-const UIController = (function() {
+const UIController = (function () {
   // DOM elements
   const DOMstrings = {
     inputType: ".add__type",
     inputDescription: ".add__description",
     inputValue: ".add__value",
-    inputBtn: ".add__btn"
+    inputBtn: ".add__btn",
   };
 
   return {
-    getInput: function() {
+    getInput: function () {
       return {
         type: document.querySelector(DOMstrings.inputType).value,
         description: document.querySelector(DOMstrings.inputDescription).value,
-        value: document.querySelector(DOMstrings.inputValue).value
+        value: document.querySelector(DOMstrings.inputValue).value,
       };
     },
 
-    getDOMstrings: function() {
+    getDOMstrings: function () {
       return DOMstrings;
-    }
+    },
   };
 })();
 
 // GLOBAL APP CONTROLLER
-const controller = (function(budgetCtrl, UICtrl) {
+const controller = (function (budgetCtrl, UICtrl) {
   const setupEventListeners = () => {
     // DOM element strings
     const DOM = UICtrl.getDOMstrings();
     document.querySelector(DOM.inputBtn).addEventListener("click", ctrlAddItem);
 
-    document.addEventListener("keyup", event => {
+    document.addEventListener("keyup", (event) => {
       // event.which used for older browser support
       if (event.keyCode === 13 || event.which === 13) {
         ctrlAddItem();
@@ -65,11 +97,13 @@ const controller = (function(budgetCtrl, UICtrl) {
   };
 
   const ctrlAddItem = () => {
+    let input, newItem;
+
     // 1. Get the field input data
-    const input = UICtrl.getInput();
-    console.log(input);
+    input = UICtrl.getInput();
 
     // 2. Add the item to the budget controller
+    newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 
     // 3. Add the item to the UI
 
@@ -79,10 +113,10 @@ const controller = (function(budgetCtrl, UICtrl) {
   };
 
   return {
-    init: function() {
+    init: function () {
       console.log("app started");
       setupEventListeners();
-    }
+    },
   };
 })(budgetController, UIController);
 
