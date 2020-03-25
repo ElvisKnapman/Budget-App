@@ -76,7 +76,7 @@ const UIController = (function () {
     },
 
     addListItem: function (obj, type) {
-      let html;
+      let html, newHtml;
       // create HTML string with placeholder text
 
       if (type === "inc") {
@@ -84,11 +84,13 @@ const UIController = (function () {
           '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       } else if (type === "exp") {
         html =
-          '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
 
       // Replace placeholder text with some actual data
-
+      newHtml = html.replace("%id%", obj.id);
+      newHTML = html.replace("%description%", obj.description);
+      newHtml = html.replace("%value%", obj.value);
       // insert HTML into the DOM
     },
 
