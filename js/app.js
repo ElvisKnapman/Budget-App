@@ -51,7 +51,7 @@ const budgetController = (function () {
     },
 
     testing: function () {
-      console.log("data:", data);
+      return data;
     },
   };
 })();
@@ -73,7 +73,8 @@ const UIController = (function () {
       return {
         type: document.querySelector(DOMstrings.inputType).value,
         description: document.querySelector(DOMstrings.inputDescription).value,
-        value: document.querySelector(DOMstrings.inputValue).value,
+        // convert value from string to number format
+        value: Number(document.querySelector(DOMstrings.inputValue).value),
       };
     },
 
@@ -113,6 +114,9 @@ const UIController = (function () {
       fieldsArr.forEach((field) => {
         field.value = "";
       });
+
+      // set focus back to first field
+      fieldsArr[0].focus();
     },
 
     getDOMstrings: function () {
@@ -136,6 +140,12 @@ const controller = (function (budgetCtrl, UICtrl) {
     });
   };
 
+  const updateBudget = () => {
+    // 1. Calculate the budget
+    // 2. Return the budget
+    // 3. Display the budget on the UI
+  };
+
   const ctrlAddItem = () => {
     let input, newItem;
 
@@ -147,10 +157,12 @@ const controller = (function (budgetCtrl, UICtrl) {
 
     // 3. Add the item to the UI
     UICtrl.addListItem(newItem, input.type);
-    UICtrl.clearFields();
-    // 4. Calculate the budget
 
-    // 5. Display the budget
+    // 4. clear UI input fields
+    UICtrl.clearFields();
+
+    // 5. Calculate and update the budget
+    updateBudget();
   };
 
   return {
