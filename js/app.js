@@ -152,17 +152,24 @@ const controller = (function (budgetCtrl, UICtrl) {
     // 1. Get the field input data
     input = UICtrl.getInput();
 
-    // 2. Add the item to the budget controller
-    newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+    // check to make sure description is not blank, and the value is both: not NaN and greater than zero
+    if (
+      input.description !== "" &&
+      Number.isNaN(input.value) !== true &&
+      input.value > 0
+    ) {
+      // 2. Add the item to the budget controller
+      newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 
-    // 3. Add the item to the UI
-    UICtrl.addListItem(newItem, input.type);
+      // 3. Add the item to the UI
+      UICtrl.addListItem(newItem, input.type);
 
-    // 4. clear UI input fields
-    UICtrl.clearFields();
+      // 4. clear UI input fields
+      UICtrl.clearFields();
 
-    // 5. Calculate and update the budget
-    updateBudget();
+      // 5. Calculate and update the budget
+      updateBudget();
+    }
   };
 
   return {
