@@ -71,10 +71,15 @@ const UIController = (function () {
   return {
     getInput: function () {
       return {
-        type: document.querySelector(DOMstrings.inputType).value,
-        description: document.querySelector(DOMstrings.inputDescription).value,
+        // trim method for all property values to eliminate leading and trailing whitespace
+        type: document.querySelector(DOMstrings.inputType).value.trim(),
+        description: document
+          .querySelector(DOMstrings.inputDescription)
+          .value.trim(),
         // convert value from string to number format
-        value: Number(document.querySelector(DOMstrings.inputValue).value),
+        value: Number(
+          document.querySelector(DOMstrings.inputValue).value.trim()
+        ),
       };
     },
 
