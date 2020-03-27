@@ -32,7 +32,7 @@ const budgetController = (function () {
       inc: 0,
     },
     budget: 0,
-    percentage: 0,
+    percentage: -1,
   };
 
   return {
@@ -70,8 +70,12 @@ const budgetController = (function () {
       // calculate the budget: income - expenses
       data.budget = data.totals.inc - data.totals.exp;
 
-      // calculate the percentage of income that we spent (round it)
-      data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+      // calculate the percentage of income that we spent (round it) --- only calculate if there is income
+      if (data.totals.inc > 0) {
+        data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+      } else {
+        data.percentage = -1;
+      }
     },
 
     getBudget: function () {
@@ -186,6 +190,7 @@ const controller = (function (budgetCtrl, UICtrl) {
     const budget = budgetCtrl.getBudget();
 
     // 3. Display the budget on the UI
+    console.log(budget);
   };
 
   const ctrlAddItem = () => {
