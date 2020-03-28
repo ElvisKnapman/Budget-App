@@ -4,6 +4,19 @@ const budgetController = (function () {
     this.id = id;
     this.description = description;
     this.value = value;
+    this.percentage = -1;
+  };
+
+  Expense.prototype.calcPercentage = function (totalIncome) {
+    if (totalIncome > 0) {
+      this.percentage = Math.round((this.value / totalIncome) * 100);
+    } else {
+      this.percentage = -1;
+    }
+  };
+
+  Expense.prototype.getPercentage = function () {
+    return this.percentage;
   };
 
   const Income = function (id, description, value) {
@@ -66,18 +79,13 @@ const budgetController = (function () {
       let ids, index;
       id = Number(id);
 
-      console.log("id", id);
-      console.log(typeof id);
       // return new array of all IDs
       ids = data.allItems[type].map((item) => {
         return item.id;
       });
 
-      console.log("ids", ids);
       // find index in array of specific id
       index = ids.indexOf(id);
-
-      console.log("index", index);
 
       if (index !== -1) {
         data.allItems[type].splice(index, 1);
@@ -98,6 +106,20 @@ const budgetController = (function () {
       } else {
         data.percentage = -1;
       }
+    },
+
+    calculatePercentages: function () {
+      data.allItems.exp.forEach((item) => {
+        item.calcPercentage(data.totals.inc);
+      });
+    },
+
+    getPercentages: function () {
+      const allPercentages = data.allItems.exp.map((item) => {
+        return item.getPercentage();
+      });
+
+      return allPercentages;
     },
 
     getBudget: function () {
@@ -161,7 +183,7 @@ const UIController = (function () {
           '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
 
-      // Replace placeholder text with some actual data
+      // replace placeholder text with some actual data
       newHtml = html.replace("%id%", obj.id);
       newHtml = newHtml.replace("%description%", obj.description);
       newHtml = newHtml.replace("%value%", obj.value);
@@ -237,20 +259,31 @@ const controller = (function (budgetCtrl, UICtrl) {
   };
 
   const updateBudget = () => {
-    // 1. Calculate the budget
+    // 1. calculate the budget
     budgetCtrl.calculateBudget();
 
-    // 2. Return the budget
+    // 2. return the budget
     const budget = budgetCtrl.getBudget();
 
-    // 3. Display the budget on the UI
+    // 3. display the budget on the UI
     UICtrl.displayBudget(budget);
+  };
+
+  const updatePercentages = () => {
+    // 1. calculate the percentages
+    budgetCtrl.calculatePercentages();
+
+    // 2. read the percentages from the budget controller
+    const percentages = budgetCtrl.getPercentages();
+
+    // 3. update the UI with the new percentages
+    console.log("percentages", percentages);
   };
 
   const ctrlAddItem = () => {
     let input, newItem;
 
-    // 1. Get the field input data
+    // 1. get the field input data
     input = UICtrl.getInput();
 
     // check to make sure description is not blank, and the value is both: not NaN and greater than zero
@@ -259,17 +292,20 @@ const controller = (function (budgetCtrl, UICtrl) {
       Number.isNaN(input.value) !== true &&
       input.value > 0
     ) {
-      // 2. Add the item to the budget controller
+      // 2. add the item to the budget controller
       newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 
-      // 3. Add the item to the UI
+      // 3. add the item to the UI
       UICtrl.addListItem(newItem, input.type);
 
       // 4. clear UI input fields
       UICtrl.clearFields();
 
-      // 5. Calculate and update the budget
+      // 5. calculate and update the budget
       updateBudget();
+
+      // 6. calculate and update the percentages
+      updatePercentages();
     }
   };
 
@@ -290,6 +326,9 @@ const controller = (function (budgetCtrl, UICtrl) {
 
       // 3. update and show the new budget
       updateBudget();
+
+      // 4. calculate and update the percentages
+      updatePercentages();
     }
   };
 
