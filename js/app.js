@@ -182,9 +182,8 @@ const UIController = (function () {
     // format number with commas if in the thousands
     int = int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+    // get decimal places
     dec = numSplit[1];
-
-    // determine if it's an income or an expense for prepending a sign
 
 
     return `${(type === 'exp' ? '-' : '+')} ${int}.${dec}`;
@@ -301,6 +300,18 @@ const UIController = (function () {
       document.querySelector(DOMstrings.dateLabel).textContent = `${months[month]} ${year}`;
     },
 
+    changedType: function () {
+      const fields = document.querySelectorAll(`${DOMstrings.inputType}, ${DOMstrings.inputDescription}, ${DOMstrings.inputValue}`);
+
+      // loop over the fields and toggle the focus class
+      fields.forEach(field => {
+        field.classList.toggle('red-focus');
+      });
+
+      // change add button color
+      document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
+    },
+
     getDOMstrings: function () {
       return DOMstrings;
     },
@@ -324,6 +335,8 @@ const controller = (function (budgetCtrl, UICtrl) {
     document
       .querySelector(DOM.container)
       .addEventListener("click", ctrlDeleteItem);
+
+    document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);
   };
 
   const updateBudget = () => {
