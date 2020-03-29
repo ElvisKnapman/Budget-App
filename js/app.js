@@ -155,6 +155,41 @@ const UIController = (function () {
     expensesPercentageLabel: ".item__percentage"
   };
 
+  const formatNumber = (num, type) => {
+    let numSplit, int, dec;
+
+    /* 
+    + or - before number
+    exactly 2 decimal places
+    comma separating the thousands
+
+    1798.5621 -> + 1,798.56
+    2000 -> + 2,000.00
+
+    1000000
+    */
+
+    // get absolute number
+    num = Math.abs(num);
+    // format number to 2 decimal places
+    num = num.toFixed(2);
+
+    numSplit = num.split('.');
+
+    int = numSplit[0];
+
+    // format number with commas if in the thousands
+    int = int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    dec = numSplit[1];
+
+    // determine if it's an income or an expense for prepending a sign
+
+
+    return `${(type === 'exp' ? '-' : '+')} ${int}.${dec}`;
+
+  }
+
   return {
     getInput: function () {
       return {
@@ -187,7 +222,7 @@ const UIController = (function () {
       // replace placeholder text with some actual data
       newHtml = html.replace("%id%", obj.id);
       newHtml = newHtml.replace("%description%", obj.description);
-      newHtml = newHtml.replace("%value%", obj.value);
+      newHtml = newHtml.replace("%value%", formatNumber(obj.value, type));
 
       // insert HTML into the DOM
       document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
